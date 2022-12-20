@@ -12,7 +12,7 @@ Convert the input data of string type into a character (Y/N/y/n) while rejecting
 ### stringtointc ('c' stands for core)
 
 Convert the input data of string type into an integer while rejecting invalid input to prevent the program from crashing. The optima of the 'valid' inputs are 32767
-and -32768 to ensure the completemess of the UI of the summary of game 1.
+and -32768 to ensure the completemess of the UI of game 1 summary.
 
 ### stringtoint
 
