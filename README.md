@@ -32,10 +32,16 @@ Check whether the user has input repeated data with function datarepeat.
 
 ### pcdatarepeat
 
-Check whether drawn numbers are generated repeatedly with function datarepea.
+Check whether drawn numbers are generated repeatedly with function datarepeat.
 
+## Documentation for Local Procedures and Functions of Magic Matrix
 
+### copy
 
+Copy the n x n array of the same 'turn' from an array of rec type to another.
 
+### luck
+
+Determine whether the current state of 
 
 
