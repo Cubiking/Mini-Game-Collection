@@ -42,6 +42,16 @@ Copy the n x n array of the same 'turn' from an array of rec type to another.
 
 ### luck
 
-Determine whether the current state of 
+Determine whether the current state of the magic matrix can be ended with one player's victory.
 
+### ai
 
+Win rate: {killrow/killcolumn=100%}>aidata2(prevent player wins)>aidata3(no end game tendancy)>aidata4(player can win with the right choice)
+
+### (replay)
+
+In development...
+
+# Credit
+
+Invaluable bug reports are welcomed.
