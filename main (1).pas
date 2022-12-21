@@ -782,6 +782,20 @@ a, b:integer;
     end;
 	      {
 	      of procedure process}
+	
+	function winning(rp:rec):boolean;
+    var temturn: integer;
+    begin
+    winning:=false;
+    temturn:=turn;
+    process(rp);
+    turn:=turn+1;
+    If ENDG(rp) then
+        winning:=true
+        else
+        winning:=false;
+    turn:=temturn;
+    end;
 	      
     function luck (square:rec):boolean;
         var 
@@ -799,11 +813,7 @@ a, b:integer;
                 copy(square,sq);
 		        ch[turn,1]:= c;
 		        ch[turn,2]:= d;
-		        process(sq);
-		        turn:=turn+1;
-		        If ENDG(sq) then 
-	                luck:=true;
-	            turn:=buffer;
+		        luck:=winning(sq);
 		        d:= d + 1;
 		        end;
 		    until luck or (d = n + 1);
@@ -832,19 +842,7 @@ a, b:integer;
 			  {
 			  of procedure init}
 			  
-function winning(rp:rec):boolean;
-var temturn: integer;
-    begin
-    winning:=false;
-    temturn:=turn;
-    process(rp);
-    turn:=turn+1;
-    If ENDG(rp) then
-        winning:=true
-        else
-        winning:=false;
-    turn:=temturn;
-    end;
+
    
 
     
@@ -858,7 +856,15 @@ var
 i,j, buffer, killrow,killcolumn, aidataflag2,aidataflag3,aidataflag4, aidataflag1: integer;
 killboo: boolean;
 aidata2,aidata3,aidata4: aidatatype;
-    
+
+    procedure copypro(origin: rec; var new: rec; i,j: integer);
+        begin
+        ch[turn,1]:=i;
+        ch[turn,2]:=j;
+        copy(origin,new);
+        process(new);
+        turn:=turn+1;
+        end;
     procedure getaidata;
     
     var
@@ -877,11 +883,7 @@ aidata2,aidata3,aidata4: aidatatype;
             for i:=1 to n do
                 for j:=1 to n do
                     begin
-                    copy(sq,bufarray);
-		            ch[turn,1]:=i;
-                    ch[turn,2]:=j;
-                    process(bufarray);
-                    turn:=turn+1;
+                    copypro(sq,bufarray,i,j);
                     If not luck(bufarray) then
                         kill:=kill+1;
                     turn:=temturn;
@@ -899,11 +901,7 @@ aidata2,aidata3,aidata4: aidatatype;
             repeat
                 j:=1;
                 repeat
-                    copy(sq,bufarray);
-                    ch[turn,1]:=i;
-                    ch[turn,2]:=j;
-                    process(bufarray);
-                    turn:=turn+1;
+                    copypro(sq,bufarray,i,j);
                     If kill(bufarray)<getkilled then
                         getkilled:=kill(bufarray);
                     j:=j+1;
@@ -911,6 +909,13 @@ aidata2,aidata3,aidata4: aidatatype;
                 until (j=n+1) or (getkilled=0);
                 i:=i+1;
             until (i=n+1) or (getkilled=0);
+            end;
+    
+        procedure getdataassign(var aidataflag: integer;var aidata: aidatatype);
+            begin
+            aidataflag:=aidataflag+1;
+            aidata[aidataflag,1]:=i;
+            aidata[aidataflag,2]:=j;
             end;
     
         begin
@@ -924,11 +929,7 @@ aidata2,aidata3,aidata4: aidatatype;
             j:=1;
             repeat
                 begin
-                copy(rp,sq);
-                ch[turn,1]:=i;
-                ch[turn,2]:=j;
-                process(sq);
-                turn:=turn+1;
+                copypro(rp,sq,i,j);
                 If not luck(sq) then
                     begin
                     If (kill(sq)=0) then
@@ -941,24 +942,12 @@ aidata2,aidata3,aidata4: aidatatype;
                         If (kill(sq)<>1) then
                             begin
                             If getkilled<>0 then
-                                begin
-                                aidataflag2:=aidataflag2+1;
-                                aidata2[aidataflag2,1]:=i;
-                                aidata2[aidataflag2,2]:=j;
-                                end
+                                getdataassign(aidataflag2,aidata2)
                                 else
-                                begin
-                                aidataflag3:=aidataflag3+1;
-                                aidata3[aidataflag3,1]:=i;
-                                aidata3[aidataflag3,2]:=j;
-                                end;
+                                getdataassign(aidataflag3,aidata3);
                             end
                             else
-                            begin
-                            aidataflag4:=aidataflag4+1;
-                            aidata4[aidataflag4,1]:=i;
-                            aidata4[aidataflag4,2]:=j;
-                            end;
+                            getdataassign(aidataflag4,aidata4);
                         end
                     end;
                 turn:=buffer;
@@ -969,6 +958,14 @@ aidata2,aidata3,aidata4: aidatatype;
         until (i=n+1) or (killrow<>0);
 		end;
 
+    procedure aiassign(aidataflag: integer; aidata:aidatatype);
+    
+        begin
+        aidataflag:=random(aidataflag)+1;
+        ch[turn,1]:=aidata[aidataflag,1];
+        ch[turn,2]:=aidata[aidataflag,2];
+        end;
+    
     begin
     i:=1;
     killrow:=0;
@@ -990,27 +987,21 @@ aidata2,aidata3,aidata4: aidatatype;
             If (aidataflag2<>0) then
                 begin
                 writeln('Second choice');
-                buffer:=random(aidataflag2)+1;
-                ch[turn,1]:=aidata2[buffer,1];
-                ch[turn,2]:=aidata2[buffer,2];
+                aiassign(aidataflag2,aidata2);
                 end
                 else
                 begin
                 If (aidataflag3<>0) then
                     begin
                     writeln('Third choice');
-                    buffer:=random(aidataflag3)+1;
-                    ch[turn,1]:=aidata3[buffer,1];
-                    ch[turn,2]:=aidata3[buffer,2];
+                    aiassign(aidataflag3,aidata3);
                     end
                     else
                     begin
                     If (aidataflag4<>0) then
                         begin
                         writeln('Fourth choice');
-                        buffer:=random(aidataflag4)+1;
-                        ch[turn,1]:=aidata4[buffer,1];
-                        ch[turn,2]:=aidata4[buffer,2];
+                        aiassign(aidataflag4,aidata4);
                         end
                         else
                         begin
@@ -1077,7 +1068,7 @@ x:char;
 	        writeln('row choosed: ',ch[turn,1]);
 	        writeln('column choosed: ',ch[turn,2]);
 	        end;
-	      process(rp);
+	        process(rp);
             writeln;
          turn := turn + 1;
 	      writeln('The values of the cells in the table are >');
@@ -1122,4 +1113,3 @@ writeln('*                           Elaine Zhu''s Family                       
 writeln('*                                  YUNG                                        *');
 base;
 end.
-
