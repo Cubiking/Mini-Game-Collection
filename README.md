@@ -3,6 +3,8 @@ This game collection consists of 3 games: Guess a Number!, Mark Six and Magic Ma
 
 Please go to the 'help' page of the program for the tutorial of the games.
 
+Link for quick looks (may not be the most updated version): https://onlinegdb.com/_-ZEuxLg_
+
 ## Documentation for Global Procedures
 
 ### stringtochar
