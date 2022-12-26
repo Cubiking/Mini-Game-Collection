@@ -56,4 +56,6 @@ In development...
 
 # Credit
 
+Cubiking's Professional Supervisor: [emailechiu](https://github.com/emailechiu)
+
 Invaluable bug reports are welcomed.
