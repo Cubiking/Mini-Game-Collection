@@ -508,17 +508,31 @@ i, j, round:integer;
 mark: array [1..999] of integer;
 luck: real;
 tryagain: boolean;
+pointer: array[0..6] of integer;
 
-procedure sort(var output:game2datatype);
-
+procedure sort;
 var
-buffer, pointer: array[1..6] of integer;
-i,j: integer;
-
+j,back, fro: integer;
+finish: boolean;
     begin
-    for i:=1 to 6 do
-        buffer[i]:=output[round,i]
-        
+    back:=0;
+    j:=1;
+    finish:=false;
+    while (j<>i) and (not finish) do
+        begin
+        If (pcdata[round,pointer[back]]>pcdata[round,i]) then
+            begin
+            pointer[i]:=pointer[back];
+            pointer[back]:=i;
+            If j<>(i-1) then
+                finish:=true;
+            end
+            else
+            If j=(i-1) then
+                pointer[pointer[back]]:=i;
+        back:=pointer[back];
+        j:=j+1;
+        end;
     end;
     
 
@@ -548,7 +562,7 @@ procedure userdatarepeat;
         begin
         writeln('Please do not repeat your choice!');
         stringtoint(userdata[round,i],true,(49-10*(4-level)),1);
-        end
+        end;
     end;
     
 procedure pcdatarepeat;
@@ -559,15 +573,17 @@ procedure pcdatarepeat;
    End;
 
     Begin
+    randomize;
     tryagain:=true;
     round:=1;
+    pointer[0]:=1;
     Repeat
         Begin
         mark[round]:=0;
         For i:=1 to 6 do
             Begin
             If i=1 
-                then Write('Please input a number from 1 to ', (49-10*(4-level)), ':')
+                then write('Please input a number from 1 to ', (49-10*(4-level)), ':')
                 else
                 Begin
                 write('Please input the ');
@@ -582,18 +598,22 @@ procedure pcdatarepeat;
                 End;
             userdatarepeat;
             End;
+        pcdata[round,1]:=random(49-10*(4-level))+1;
         For i:=2 to 6 do
             Begin
             pcdatarepeat;
+            sort;
             For j:=1 to 6 do
             If userdata[round,j]=pcdata[round,i] then 
             mark[round]:=mark[round]+1;
             End;
         writeln('Your mark: ', mark[round]);
         write('The 6 numbers are');
-         for i:=1 to 6 do
+        j:=0;
+        for i:=1 to 6 do
             begin
-            write(' ',pcdata[round,i]);
+            write(' ',pcdata[round,pointer[j]]);
+            j:=pointer[j];
             if i<>6 then write(',');
             end;
         writeln('.');
