@@ -28,6 +28,10 @@ UI procedures for reducing the number of lines of the code.
 
 ## Documentation for Local Procedures of Mark Six
 
+### sort
+
+Sort the drawn numbers in ascending order with pointers
+
 ### userdatarepeat
 
 Check whether the user has input repeated data with function datarepeat.
