@@ -3,7 +3,7 @@ This game collection consists of 3 games: Guess a Number!, Mark Six and Magic Ma
 
 Please go to the 'help' page of the program for the tutorial of the games.
 
-Link for quick looks (may not be the most updated version): https://onlinegdb.com/_-ZEuxLg_
+Link for a quick look (may not be the most updated version): https://onlinegdb.com/uEIjSR6hh
 
 ## Documentation for Global Procedures
 
@@ -54,9 +54,9 @@ Determine whether the current state of the magic matrix can be ended with one pl
 
 Win rate: {killrow/killcolumn=100%}>aidata2(prevent player wins)>aidata3(no end game tendancy)>aidata4(player can win with the right choice)
 
-### (replay)
+### replay
 
-In development...
+Display the instant replay of the game from the initial state to the final one. 
 
 # Credit
 
