@@ -744,6 +744,7 @@ procedure show2(rp:rec);
 	Display the contents of the table}
 	var r, c:integer;
 	Begin
+	writeln('The values of the cells in the table are >');
 	for r:= 1 to n do
 	    Begin
 	    for c:= 1 to n do
@@ -1040,17 +1041,60 @@ aidata2,aidata3,aidata4: aidatatype;
         end;
     end;
     
+    procedure aiornot;
+        begin
+        If ((turn mod ppl)+1)<>haveai then
+            writeln ('Turn > Player ', (turn mod ppl) + 1)
+            else
+            writeln ('Turn > Bot ');
+        end;
+    
 procedure replay;
 var 
-a, b:integer;
+a, b, finalturn:integer;
 x:char;
+
+    procedure replayshow;
+        begin
+        writeln;
+        aiornot;
+	    writeln('row choosed: ',ch[turn,1]);
+	    writeln('column choosed: ',ch[turn,2]);
+	    writeln;
+    end;
 			  
 	begin
 	writeln('Do you want to watch the instant replay before quitting the game?(Y/N)');
-	readln (x);
+	stringtochar(x,true);
+	while not (x in ['y','Y','n','N']) do
+	    begin
+	    write('Please clarify your choice: ');
+	    stringtochar(x,true);
+	    end;
 	If (x = 'y') or (x = 'Y') then
 	    begin 
-	    writeln('Replay') 
+	    finalturn:=turn;
+	    turn:=0;
+	    writeln('Initial State >');
+	    show;
+        replayshow;
+	    writeln;
+	    for a:= 1 to (((finalturn-1) div ppl)+((finalturn-1) mod ppl))  do
+	        begin
+	        writeln('Round ', (turn div ppl)+1, ' >');
+	        writeln;
+	        repeat
+	            turn:=turn+1;
+	            show;
+	            replayshow;
+	        until (turn=finalturn-1) or ((turn mod ppl)=0);
+	        end;
+	    turn:=turn+1;
+	    show;
+	    writeln;
+	    writeln;
+	    writeln('Please press enter to go back to the main menu.');
+	    readln;
 	    end 
     end;
 
@@ -1078,11 +1122,11 @@ x:char;
          writeln;
          If ((turn mod ppl)+1)<>haveai then
             begin
-            writeln ('Turn > Player ', (turn mod ppl) + 1:2);
+            writeln ('Turn > Player ', (turn mod ppl) + 1);
             get_data;
             end
             else
-            begin
+            begin      
             writeln ('Turn > Bot ');
 	        ai;
 	        writeln('row choosed: ',ch[turn,1]);
@@ -1091,7 +1135,7 @@ x:char;
 	        process(rp);
             writeln;
          turn := turn + 1;
-	      writeln('The values of the cells in the table are >');
+
 	      show;
 	      end;
       Until ENDG (rp);
@@ -1100,10 +1144,11 @@ x:char;
         writeln ('Player ', ((turn-1) mod ppl)+1,  ' wins the game.')
         else
         writeln('Bot wins the game.');
-      writeln('Please press enter to continue.');
+        replay;
+
     {replay
     writeln('Press Enter to go back to the main menu');}
-      readln;
+      
       end;
   
 Begin 
